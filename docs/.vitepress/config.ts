@@ -19,7 +19,8 @@ export default defineConfig({
     nav: [
       { text: '首页', link: '/' },
       { text: '课前准备', link: '/prepare' },
-      { text: '开始学习', link: '/lessons/01-meet-ai' }
+      { text: '开始学习', link: '/lessons/01-meet-ai' },
+      { text: '常见问题', link: '/faq' }
     ],
 
     sidebar: [
@@ -40,6 +41,12 @@ export default defineConfig({
           { text: '第6课：给作品加上AI超能力', link: '/lessons/06-ai-power' },
           { text: '第7课：展示你的作品集', link: '/lessons/07-showcase' }
         ]
+      },
+      {
+        text: '更多',
+        items: [
+          { text: '常见问题', link: '/faq' }
+        ]
       }
     ],
 
@@ -58,6 +65,20 @@ export default defineConfig({
 
     darkModeSwitchLabel: '主题',
     sidebarMenuLabel: '目录',
-    returnToTopLabel: '回到顶部'
+    returnToTopLabel: '回到顶部',
+
+    search: {
+      provider: 'local',
+      options: {
+        translations: {
+          button: { buttonText: '搜索', buttonAriaLabel: '搜索' },
+          modal: {
+            noResultsText: '没有找到相关内容',
+            resetButtonTitle: '清除搜索',
+            footer: { selectText: '选择', navigateText: '切换', closeText: '关闭' }
+          }
+        }
+      }
+    }
   }
 })
