@@ -1,0 +1,28 @@
+/* 活泼友好的配色方案 */
+:root {
+  --vp-c-brand-1: #7c3aed;
+  --vp-c-brand-2: #8b5cf6;
+  --vp-c-brand-3: #a78bfa;
+  --vp-c-brand-soft: rgba(124, 58, 237, 0.1);
+
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
+  --vp-home-hero-image-background-image: linear-gradient(135deg, #7c3aed33 0%, #ec489933 100%);
+  --vp-home-hero-image-filter: blur(56px);
+}
+
+/* 自定义提示框样式 */
+.custom-block.tip {
+  border-color: #7c3aed;
+}
+
+/* 让代码块更友好 */
+.vp-doc div[class*='language-'] {
+  border-radius: 12px;
+}
+
+/* 魔法咒语提示块样式 */
+.vp-doc .custom-block.info {
+  background-color: rgba(124, 58, 237, 0.05);
+  border-color: #8b5cf6;
+}
