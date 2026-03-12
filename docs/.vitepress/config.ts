@@ -4,6 +4,16 @@ export default defineConfig({
   lang: 'zh-CN',
   title: 'AI编程启蒙课',
   description: '写给初中生的 Claude Code 入门教程',
+  base: '/beloved/',
+
+  head: [
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
+    ['meta', { property: 'og:type', content: 'website' }],
+    ['meta', { property: 'og:title', content: 'AI编程启蒙课' }],
+    ['meta', { property: 'og:description', content: '用 Claude Code 开启你的编程之旅 —— 写给初中生的零基础 AI 编程教程' }],
+    ['meta', { name: 'twitter:card', content: 'summary' }],
+    ['meta', { name: 'theme-color', content: '#7c3aed' }],
+  ],
 
   themeConfig: {
     nav: [

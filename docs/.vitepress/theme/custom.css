@@ -26,3 +26,21 @@
   background-color: rgba(124, 58, 237, 0.05);
   border-color: #8b5cf6;
 }
+
+/* 移动端优化 */
+@media (max-width: 640px) {
+  .vp-doc h1 {
+    font-size: 1.75rem;
+  }
+
+  .vp-doc table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .vp-doc div[class*='language-'] {
+    margin: 0 -1rem;
+    border-radius: 0;
+  }
+}
