@@ -21,6 +21,7 @@ export default defineConfig({
       { text: '课前准备', link: '/prepare' },
       { text: '开始学习', link: '/lessons/01-meet-ai' },
       { text: '常见问题', link: '/faq' },
+      { text: '家长/老师指南', link: '/guide' },
       { text: '课程反馈', link: 'https://github.com/zhouning/beloved/discussions' }
     ],
 
@@ -46,7 +47,10 @@ export default defineConfig({
       {
         text: '更多',
         items: [
-          { text: '常见问题', link: '/faq' }
+          { text: '常见问题', link: '/faq' },
+          { text: '报错排查', link: '/troubleshooting' },
+          { text: '术语表', link: '/glossary' },
+          { text: '家长/老师指南', link: '/guide' }
         ]
       }
     ],
