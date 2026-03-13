@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>番茄钟学习计时器</title>
+  <style>
+    /* ===== 全局样式重置 ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: -apple-system, "Microsoft YaHei", "微软雅黑", sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      /* 默认学习模式的暖色背景，会在 JS 中动态切换 */
+      background: linear-gradient(135deg, #fff5f0 0%, #ffe8e0 50%, #ffd6cc 100%);
+      transition: background 0.8s ease;
+      color: #333;
+    }
+
+    /* 休息模式的冷色背景 */
+    body.break-mode {
+      background: linear-gradient(135deg, #e0f7fa 0%, #d0f0f0 50%, #b2ebf2 100%);
+    }
+
+    /* ===== 主容器 ===== */
+    .container {
+      max-width: 420px;
+      width: 100%;
+    }
+
+    /* ===== 卡片样式 ===== */
+    .card {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      border-radius: 32px;
+      padding: 40px 32px;
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.08);
+      text-align: center;
+    }
+
+    /* ===== 顶部标题和模式标签 ===== */
+    .header {
+      margin-bottom: 8px;
+    }
+
+    .title {
+      font-size: 1.5em;
+      font-weight: 800;
+      color: #e85d3a;
+      transition: color 0.6s ease;
+    }
+
+    body.break-mode .title {
+      color: #0097a7;
+    }
+
+    .mode-badge {
+      display: inline-block;
+      padding: 6px 20px;
+      border-radius: 20px;
+      font-size: 0.85em;
+      font-weight: 700;
+      color: white;
+      margin-top: 10px;
+      background: linear-gradient(135deg, #ff6b4a, #ff8a65);
+      transition: background 0.6s ease;
+    }
+
+    body.break-mode .mode-badge {
+      background: linear-gradient(135deg, #26c6da, #4dd0e1);
+    }
+
+    /* ===== 计时器环形区域 ===== */
+    .timer-wrapper {
+      position: relative;
+      width: 240px;
+      height: 240px;
+      margin: 28px auto;
+    }
+
+    /* SVG 环形进度条 */
+    .timer-svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .timer-track {
+      fill: none;
+      stroke: #f0e6e2;
+      stroke-width: 8;
+      transition: stroke 0.6s ease;
+    }
+
+    body.break-mode .timer-track {
+      stroke: #d0eded;
+    }
+
+    .timer-progress {
+      fill: none;
+      stroke: #ff6b4a;
+      stroke-width: 8;
+      stroke-linecap: round;
+      /* 用 stroke-dasharray 和 stroke-dashoffset 控制进度 */
+      stroke-dasharray: 691.15;  /* 2 * PI * 110 */
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 0.5s linear, stroke 0.6s ease;
+    }
+
+    body.break-mode .timer-progress {
+      stroke: #26c6da;
+    }
+
+    /* 时间数字（覆盖在 SVG 上方） */
+    .timer-display {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .time-text {
+      font-size: 3.2em;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      color: #e85d3a;
+      letter-spacing: 2px;
+      transition: color 0.6s ease;
+    }
+
+    body.break-mode .time-text {
+      color: #0097a7;
+    }
+
+    /* ===== 控制按钮区域 ===== */
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 8px;
+      margin-bottom: 28px;
+    }
+
+    .btn {
+      width: 64px;
+      height: 64px;
+      border: none;
+      border-radius: 50%;
+      font-size: 1.5em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    .btn:hover {
+      transform: scale(1.1);
+    }
+
+    .btn:active {
+      transform: scale(0.95);
+    }
+
+    /* 开始/暂停按钮 */
+    .btn-play {
+      background: linear-gradient(135deg, #ff6b4a, #ff8a65);
+      box-shadow: 0 4px 16px rgba(255, 107, 74, 0.4);
+    }
+
+    body.break-mode .btn-play {
+      background: linear-gradient(135deg, #26c6da, #4dd0e1);
+      box-shadow: 0 4px 16px rgba(38, 198, 218, 0.4);
+    }
+
+    /* 重置按钮 */
+    .btn-reset {
+      background: linear-gradient(135deg, #ccc, #bbb);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 声音开关按钮 */
+    .btn-sound {
+      background: linear-gradient(135deg, #a78bfa, #8b5cf6);
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+    }
+
+    /* ===== 番茄计数 ===== */
+    .stats {
+      padding: 16px;
+      background: #fafafa;
+      border-radius: 16px;
+      transition: background 0.6s ease;
+    }
+
+    body.break-mode .stats {
+      background: #eef9f9;
+    }
+
+    .stats-text {
+      font-size: 1em;
+      color: #888;
+    }
+
+    .stats-count {
+      font-size: 1.8em;
+      font-weight: 800;
+      color: #e85d3a;
+      transition: color 0.6s ease;
+    }
+
+    body.break-mode .stats-count {
+      color: #0097a7;
+    }
+
+    .tomato-icons {
+      margin-top: 6px;
+      font-size: 1.3em;
+      letter-spacing: 4px;
+    }
+
+    /* ===== 脉冲动画（计时中的呼吸效果） ===== */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .pulsing .time-text {
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* ===== 结束提示动画 ===== */
+    @keyframes celebrate {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.08); }
+    }
+
+    .celebrating .timer-display {
+      animation: celebrate 0.5s ease 3;
+    }
+
+    /* ===== 响应式适配 ===== */
+    @media (max-width: 480px) {
+      .card {
+        padding: 28px 20px;
+        border-radius: 24px;
+      }
+
+      .timer-wrapper {
+        width: 200px;
+        height: 200px;
+      }
+
+      .time-text {
+        font-size: 2.6em;
+      }
+
+      .btn {
+        width: 56px;
+        height: 56px;
+        font-size: 1.3em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+
+      <!-- 标题区域 -->
+      <div class="header">
+        <h1 class="title">🍅 番茄钟学习计时器</h1>
+        <div class="mode-badge" id="modeBadge">📖 专注学习中</div>
+      </div>
+
+      <!-- 计时器区域 -->
+      <div class="timer-wrapper" id="timerWrapper">
+        <!-- SVG 圆环进度条 -->
+        <svg class="timer-svg" viewBox="0 0 240 240">
+          <!-- 底部轨道圆 -->
+          <circle class="timer-track" cx="120" cy="120" r="110" />
+          <!-- 进度圆（会被 JS 控制） -->
+          <circle class="timer-progress" id="progressRing" cx="120" cy="120" r="110" />
+        </svg>
+        <!-- 时间显示 -->
+        <div class="timer-display">
+          <div class="time-text" id="timeDisplay">25:00</div>
+        </div>
+      </div>
+
+      <!-- 控制按钮 -->
+      <div class="controls">
+        <button class="btn btn-sound" id="soundBtn" onclick="toggleSound()" title="声音开关">🔔</button>
+        <button class="btn btn-play" id="playBtn" onclick="toggleTimer()" title="开始/暂停">▶</button>
+        <button class="btn btn-reset" onclick="resetTimer()" title="重置">↺</button>
+      </div>
+
+      <!-- 番茄计数统计 -->
+      <div class="stats">
+        <div class="stats-text">今日已完成</div>
+        <div class="stats-count" id="pomodoroCount">0</div>
+        <div class="tomato-icons" id="tomatoIcons"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // ===== 常量配置 =====
+    const STUDY_MINUTES = 25;    // 学习时长（分钟）
+    const BREAK_MINUTES = 5;     // 休息时长（分钟）
+    const CIRCUMFERENCE = 2 * Math.PI * 110;  // 进度环周长
+
+    // ===== 全局状态 =====
+    let isRunning = false;      // 是否正在计时
+    let isBreakMode = false;    // 是否处于休息模式
+    let soundEnabled = true;    // 声音是否开启
+    let totalSeconds = STUDY_MINUTES * 60;  // 当前模式总秒数
+    let remainingSeconds = totalSeconds;     // 剩余秒数
+    let timerInterval = null;   // 定时器引用
+    let pomodoroCount = 0;      // 已完成番茄数
+
+    // ===== DOM 元素引用 =====
+    const timeDisplay = document.getElementById('timeDisplay');
+    const progressRing = document.getElementById('progressRing');
+    const playBtn = document.getElementById('playBtn');
+    const modeBadge = document.getElementById('modeBadge');
+    const timerWrapper = document.getElementById('timerWrapper');
+    const soundBtn = document.getElementById('soundBtn');
+
+    // ===== 初始化进度环 =====
+    progressRing.style.strokeDasharray = CIRCUMFERENCE;
+    progressRing.style.strokeDashoffset = 0;
+
+    // ===== 格式化时间显示 =====
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      // 补零：确保始终显示两位数
+      return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
+
+    // ===== 更新界面显示 =====
+    function updateDisplay() {
+      // 更新时间文字
+      timeDisplay.textContent = formatTime(remainingSeconds);
+
+      // 更新进度环（已过去的比例）
+      const elapsed = totalSeconds - remainingSeconds;
+      const progress = elapsed / totalSeconds;
+      progressRing.style.strokeDashoffset = CIRCUMFERENCE * (1 - progress);
+    }
+
+    // ===== 开始/暂停切换 =====
+    function toggleTimer() {
+      if (isRunning) {
+        // 暂停计时
+        pauseTimer();
+      } else {
+        // 开始计时
+        startTimer();
+      }
+    }
+
+    // ===== 开始计时 =====
+    function startTimer() {
+      isRunning = true;
+      playBtn.textContent = '⏸';
+      timerWrapper.classList.add('pulsing');
+
+      timerInterval = setInterval(() => {
+        remainingSeconds--;
+
+        if (remainingSeconds <= 0) {
+          // 时间到！
+          clearInterval(timerInterval);
+          timerInterval = null;
+          isRunning = false;
+          playBtn.textContent = '▶';
+          timerWrapper.classList.remove('pulsing');
+
+          // 播放提示音
+          playNotificationSound();
+
+          // 庆祝动画
+          timerWrapper.classList.add('celebrating');
+          setTimeout(() => timerWrapper.classList.remove('celebrating'), 1600);
+
+          if (!isBreakMode) {
+            // 学习结束 → 增加番茄数，切换到休息模式
+            pomodoroCount++;
+            updatePomodoroDisplay();
+            setTimeout(() => switchMode(true), 1200);
+          } else {
+            // 休息结束 → 切换回学习模式
+            setTimeout(() => switchMode(false), 1200);
+          }
+          return;
+        }
+
+        updateDisplay();
+      }, 1000);
+    }
+
+    // ===== 暂停计时 =====
+    function pauseTimer() {
+      isRunning = false;
+      clearInterval(timerInterval);
+      timerInterval = null;
+      playBtn.textContent = '▶';
+      timerWrapper.classList.remove('pulsing');
+    }
+
+    // ===== 重置计时器 =====
+    function resetTimer() {
+      pauseTimer();
+      // 重置到当前模式的初始状态
+      remainingSeconds = totalSeconds;
+      updateDisplay();
+    }
+
+    // ===== 切换学习/休息模式 =====
+    function switchMode(toBreak) {
+      isBreakMode = toBreak;
+
+      if (toBreak) {
+        // 切换到休息模式
+        document.body.classList.add('break-mode');
+        modeBadge.textContent = '☕ 休息一下';
+        totalSeconds = BREAK_MINUTES * 60;
+      } else {
+        // 切换回学习模式
+        document.body.classList.remove('break-mode');
+        modeBadge.textContent = '📖 专注学习中';
+        totalSeconds = STUDY_MINUTES * 60;
+      }
+
+      remainingSeconds = totalSeconds;
+      updateDisplay();
+    }
+
+    // ===== 更新番茄计数显示 =====
+    function updatePomodoroDisplay() {
+      document.getElementById('pomodoroCount').textContent = pomodoroCount;
+      // 每个完成的番茄显示一个番茄图标
+      document.getElementById('tomatoIcons').textContent = '🍅'.repeat(pomodoroCount);
+    }
+
+    // ===== 声音开关 =====
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      soundBtn.textContent = soundEnabled ? '🔔' : '🔕';
+    }
+
+    // ===== 使用 Web Audio API 播放提示音 =====
+    function playNotificationSound() {
+      if (!soundEnabled) return;
+
+      try {
+        // 创建音频上下文
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        // 播放三声清脆的提示音
+        const notes = [523.25, 659.25, 783.99]; // C5, E5, G5 和弦音
+        notes.forEach((freq, i) => {
+          const oscillator = audioCtx.createOscillator();
+          const gainNode = audioCtx.createGain();
+
+          oscillator.connect(gainNode);
+          gainNode.connect(audioCtx.destination);
+
+          oscillator.type = 'sine';
+          oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+          // 设置音量包络（渐入渐出）
+          gainNode.gain.setValueAtTime(0, audioCtx.currentTime + i * 0.3);
+          gainNode.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + i * 0.3 + 0.05);
+          gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + i * 0.3 + 0.4);
+
+          oscillator.start(audioCtx.currentTime + i * 0.3);
+          oscillator.stop(audioCtx.currentTime + i * 0.3 + 0.5);
+        });
+      } catch (e) {
+        // 如果浏览器不支持 Web Audio API，静默忽略
+        console.log('音频播放失败：', e);
+      }
+    }
+
+    // ===== 初始化显示 =====
+    updateDisplay();
+  </script>
+</body>
+</html>

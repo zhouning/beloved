@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>你是什么类型的学习者？</title>
+  <style>
+    /* ===== 全局样式重置 ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #e0e7ff 0%, #f0e6ff 50%, #fce4ec 100%);
+      min-height: 100vh;
+      font-family: -apple-system, "Microsoft YaHei", "微软雅黑", sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #333;
+    }
+
+    /* ===== 主容器 ===== */
+    .container {
+      max-width: 560px;
+      width: 100%;
+    }
+
+    /* ===== 卡片样式 ===== */
+    .card {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(12px);
+      border-radius: 28px;
+      padding: 40px 32px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+      text-align: center;
+    }
+
+    /* ===== 界面状态控制（用 CSS 类切换显示） ===== */
+    .screen {
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== 欢迎页 ===== */
+    .welcome-icon {
+      font-size: 4em;
+      margin-bottom: 16px;
+    }
+
+    .welcome-title {
+      font-size: 1.8em;
+      font-weight: 800;
+      color: #5b4a9e;
+      margin-bottom: 12px;
+    }
+
+    .welcome-desc {
+      font-size: 1.05em;
+      color: #777;
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+
+    /* ===== 按钮通用样式 ===== */
+    .btn {
+      display: inline-block;
+      padding: 14px 40px;
+      border: none;
+      border-radius: 50px;
+      font-size: 1.1em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: white;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      box-shadow: 0 4px 16px rgba(102, 126, 234, 0.35);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(102, 126, 234, 0.45);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    /* ===== 进度条 ===== */
+    .progress-bar {
+      margin-bottom: 28px;
+    }
+
+    .progress-text {
+      font-size: 0.9em;
+      color: #999;
+      margin-bottom: 8px;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 8px;
+      background: #eee;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+
+    /* ===== 题目区域 ===== */
+    .question-text {
+      font-size: 1.3em;
+      font-weight: 700;
+      color: #444;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .option-btn {
+      width: 100%;
+      padding: 16px 20px;
+      border: 2px solid #e8e8f0;
+      border-radius: 16px;
+      background: white;
+      font-size: 1em;
+      color: #555;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-align: left;
+      line-height: 1.5;
+    }
+
+    .option-btn:hover {
+      border-color: #667eea;
+      background: #f5f3ff;
+      transform: translateX(6px);
+    }
+
+    .option-btn:active {
+      transform: translateX(3px);
+    }
+
+    /* 选项前面的标记字母 */
+    .option-label {
+      display: inline-block;
+      width: 28px;
+      height: 28px;
+      line-height: 28px;
+      text-align: center;
+      border-radius: 50%;
+      background: #f0eeff;
+      color: #667eea;
+      font-weight: 700;
+      font-size: 0.85em;
+      margin-right: 12px;
+      vertical-align: middle;
+    }
+
+    /* ===== 结果页 ===== */
+    .result-icon {
+      font-size: 4em;
+      margin-bottom: 12px;
+    }
+
+    .result-type {
+      font-size: 1.8em;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .result-badge {
+      display: inline-block;
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-size: 0.85em;
+      font-weight: 600;
+      color: white;
+      margin-bottom: 20px;
+    }
+
+    .result-desc {
+      font-size: 1.05em;
+      color: #666;
+      line-height: 1.8;
+      margin-bottom: 24px;
+      text-align: left;
+    }
+
+    .result-tips {
+      background: #f8f7ff;
+      border-radius: 16px;
+      padding: 20px 24px;
+      text-align: left;
+      margin-bottom: 28px;
+    }
+
+    .result-tips h3 {
+      font-size: 1.05em;
+      color: #555;
+      margin-bottom: 12px;
+    }
+
+    .result-tips ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .result-tips li {
+      font-size: 0.95em;
+      color: #666;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .result-tips li::before {
+      content: "✅";
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
+    /* 三种结果的主题色 */
+    .result-visual .result-type { color: #3b82f6; }
+    .result-visual .result-badge { background: linear-gradient(135deg, #3b82f6, #60a5fa); }
+    .result-visual .result-tips { background: #eff6ff; }
+
+    .result-auditory .result-type { color: #22c55e; }
+    .result-auditory .result-badge { background: linear-gradient(135deg, #22c55e, #4ade80); }
+    .result-auditory .result-tips { background: #f0fdf4; }
+
+    .result-kinesthetic .result-type { color: #f97316; }
+    .result-kinesthetic .result-badge { background: linear-gradient(135deg, #f97316, #fb923c); }
+    .result-kinesthetic .result-tips { background: #fff7ed; }
+
+    /* ===== 响应式适配 ===== */
+    @media (max-width: 480px) {
+      .card {
+        padding: 28px 20px;
+        border-radius: 22px;
+      }
+
+      .welcome-title {
+        font-size: 1.5em;
+      }
+
+      .question-text {
+        font-size: 1.15em;
+      }
+
+      .option-btn {
+        padding: 14px 16px;
+        font-size: 0.95em;
+      }
+
+      .result-type {
+        font-size: 1.5em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+
+      <!-- ===== 欢迎页 ===== -->
+      <div id="welcome" class="screen active">
+        <div class="welcome-icon">🧠</div>
+        <h1 class="welcome-title">你是什么类型的学习者？</h1>
+        <p class="welcome-desc">
+          每个人都有最适合自己的学习方式。<br>
+          回答 5 个小问题，发现你的学习超能力吧！
+        </p>
+        <button class="btn" onclick="startQuiz()">开始测试 🚀</button>
+      </div>
+
+      <!-- ===== 答题页 ===== -->
+      <div id="quiz" class="screen">
+        <div class="progress-bar">
+          <div class="progress-text" id="progressText">第 1 题 / 共 5 题</div>
+          <div class="progress-track">
+            <div class="progress-fill" id="progressFill" style="width: 20%"></div>
+          </div>
+        </div>
+        <div id="questionArea">
+          <!-- 题目和选项由 JS 动态填充 -->
+        </div>
+      </div>
+
+      <!-- ===== 结果页 ===== -->
+      <div id="result" class="screen">
+        <div id="resultContent">
+          <!-- 结果由 JS 动态填充 -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // ===== 题目数据 =====
+    // 每题三个选项分别对应：视觉型(V)、听觉型(A)、动手型(K)
+    const questions = [
+      {
+        text: "📚 上课时，你最容易记住老师讲的内容是通过……",
+        options: [
+          { label: "A", text: "看老师写在黑板上的笔记和图表", type: "V" },
+          { label: "B", text: "认真听老师的讲解和举例", type: "A" },
+          { label: "C", text: "自己跟着动手做练习题", type: "K" }
+        ]
+      },
+      {
+        text: "🏠 写作业的时候，你更喜欢……",
+        options: [
+          { label: "A", text: "用不同颜色的笔标记重点", type: "V" },
+          { label: "B", text: "一边念出声一边记忆", type: "A" },
+          { label: "C", text: "走来走去或者边做边想", type: "K" }
+        ]
+      },
+      {
+        text: "🎓 如果要学一个全新的东西，你会……",
+        options: [
+          { label: "A", text: "先看教程视频或图文说明", type: "V" },
+          { label: "B", text: "找人给我讲一遍，或者听播客", type: "A" },
+          { label: "C", text: "直接上手试，边做边学", type: "K" }
+        ]
+      },
+      {
+        text: "📱 课间休息时，你通常会……",
+        options: [
+          { label: "A", text: "刷短视频、看漫画或者画画", type: "V" },
+          { label: "B", text: "和同学聊天、听音乐", type: "A" },
+          { label: "C", text: "到处走走、打球或者玩点什么", type: "K" }
+        ]
+      },
+      {
+        text: "🧪 科学实验课上，你觉得最有趣的是……",
+        options: [
+          { label: "A", text: "观察实验现象的变化过程", type: "V" },
+          { label: "B", text: "听老师解释为什么会这样", type: "A" },
+          { label: "C", text: "自己亲手操作做实验", type: "K" }
+        ]
+      }
+    ];
+
+    // ===== 结果数据 =====
+    const results = {
+      V: {
+        icon: "👀",
+        type: "视觉型学习者",
+        badge: "Visual Learner",
+        className: "result-visual",
+        desc: "你是一个视觉型学习者！你的眼睛就是你的超能力。你特别擅长通过图片、颜色、视频和图表来理解和记忆知识。在你的大脑里，信息会自动变成一幅幅生动的画面。",
+        tips: [
+          "用思维导图整理知识点，越丰富越好",
+          "多用彩色笔和荧光笔标记重点",
+          "看教学视频比光听讲效果更好",
+          "把公式和要点做成好看的卡片贴在桌前"
+        ]
+      },
+      A: {
+        icon: "👂",
+        type: "听觉型学习者",
+        badge: "Auditory Learner",
+        className: "result-auditory",
+        desc: "你是一个听觉型学习者！你的耳朵就是你的超能力。你特别擅长通过聆听和讨论来吸收知识。别人说的话、音乐的旋律，都能在你脑海中留下深刻印象。",
+        tips: [
+          "上课认真听讲，比课后看笔记效果好",
+          "背单词时大声朗读出来",
+          "和同学一起讨论问题，说出来就记住了",
+          "用语音备忘录录下重点，反复听"
+        ]
+      },
+      K: {
+        icon: "🤲",
+        type: "动手型学习者",
+        badge: "Hands-on Learner",
+        className: "result-kinesthetic",
+        desc: "你是一个动手型学习者！你的双手就是你的超能力。比起坐着听讲或看书，你更喜欢亲自动手尝试。只要做过一次，你就能深深记住！",
+        tips: [
+          "学编程对你来说超适合——边写边学",
+          "做科学实验、手工项目时你最专注",
+          "写作业时可以站着或走动，思路更清晰",
+          "用实际例子和动手练习代替死记硬背"
+        ]
+      }
+    };
+
+    // ===== 全局状态 =====
+    let currentQuestion = 0;  // 当前题号（从 0 开始）
+    let scores = { V: 0, A: 0, K: 0 };  // 各类型得分
+
+    // ===== 切换界面 =====
+    function showScreen(screenId) {
+      // 隐藏所有界面
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      // 显示目标界面，并重新触发动画
+      const target = document.getElementById(screenId);
+      target.classList.add('active');
+      // 用一个小技巧重新播放 CSS 动画
+      target.style.animation = 'none';
+      target.offsetHeight; // 触发浏览器重排
+      target.style.animation = '';
+    }
+
+    // ===== 开始测试 =====
+    function startQuiz() {
+      currentQuestion = 0;
+      scores = { V: 0, A: 0, K: 0 };
+      showScreen('quiz');
+      renderQuestion();
+    }
+
+    // ===== 渲染当前题目 =====
+    function renderQuestion() {
+      const q = questions[currentQuestion];
+      const area = document.getElementById('questionArea');
+
+      // 更新进度
+      document.getElementById('progressText').textContent =
+        `第 ${currentQuestion + 1} 题 / 共 ${questions.length} 题`;
+      document.getElementById('progressFill').style.width =
+        `${((currentQuestion + 1) / questions.length) * 100}%`;
+
+      // 生成题目 HTML
+      area.style.animation = 'none';
+      area.offsetHeight;
+      area.style.animation = 'fadeIn 0.4s ease';
+
+      area.innerHTML = `
+        <div class="question-text">${q.text}</div>
+        <div class="options">
+          ${q.options.map((opt, i) => `
+            <button class="option-btn" onclick="selectOption('${opt.type}')">
+              <span class="option-label">${opt.label}</span>${opt.text}
+            </button>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    // ===== 选择答案 =====
+    function selectOption(type) {
+      // 增加对应类型的分数
+      scores[type]++;
+      currentQuestion++;
+
+      if (currentQuestion < questions.length) {
+        // 还有题目，显示下一题
+        renderQuestion();
+      } else {
+        // 答完所有题，显示结果
+        showResult();
+      }
+    }
+
+    // ===== 显示结果 =====
+    function showResult() {
+      // 找出得分最高的类型
+      let maxType = 'V';
+      if (scores.A > scores[maxType]) maxType = 'A';
+      if (scores.K > scores[maxType]) maxType = 'K';
+
+      const r = results[maxType];
+
+      document.getElementById('resultContent').innerHTML = `
+        <div class="${r.className}">
+          <div class="result-icon">${r.icon}</div>
+          <div class="result-type">${r.type}</div>
+          <span class="result-badge">${r.badge}</span>
+          <p class="result-desc">${r.desc}</p>
+          <div class="result-tips">
+            <h3>💡 学习小建议：</h3>
+            <ul>
+              ${r.tips.map(tip => `<li>${tip}</li>`).join('')}
+            </ul>
+          </div>
+          <button class="btn" onclick="startQuiz()">重新测试 🔄</button>
+        </div>
+      `;
+
+      showScreen('result');
+    }
+  </script>
+</body>
+</html>

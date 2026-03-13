@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小明的编程之旅 - 个人作品集</title>
+<style>
+/* ========== CSS 变量（亮色/暗色主题） ========== */
+:root {
+  --bg-primary: #f8f9fc;
+  --bg-card: #ffffff;
+  --bg-section-alt: #f0f2f8;
+  --text-primary: #1a1a2e;
+  --text-secondary: #555;
+  --text-muted: #888;
+  --accent: #6c5ce7;
+  --accent-light: #a29bfe;
+  --accent-bg: #f0eeff;
+  --border: #e8e8f0;
+  --shadow: rgba(0,0,0,0.08);
+  --shadow-hover: rgba(108,92,231,0.2);
+  --timeline-line: #d0cde8;
+  --tag-bg: #eef0ff;
+  --tag-text: #6c5ce7;
+  --modal-overlay: rgba(0,0,0,0.5);
+}
+
+[data-theme="dark"] {
+  --bg-primary: #0f0e17;
+  --bg-card: #1a1a2e;
+  --bg-section-alt: #16162a;
+  --text-primary: #eaeaea;
+  --text-secondary: #b0b0c0;
+  --text-muted: #777;
+  --accent: #a29bfe;
+  --accent-light: #c5c0ff;
+  --accent-bg: #2a2750;
+  --border: #2a2a40;
+  --shadow: rgba(0,0,0,0.3);
+  --shadow-hover: rgba(162,155,254,0.25);
+  --timeline-line: #3a3a5c;
+  --tag-bg: #2a2750;
+  --tag-text: #a29bfe;
+  --modal-overlay: rgba(0,0,0,0.7);
+}
+
+/* ========== 全局样式 ========== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background 0.3s, color 0.3s;
+  line-height: 1.6;
+}
+
+/* ========== 主题切换按钮 ========== */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 200;
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-size: 1.3rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  box-shadow: 0 2px 10px var(--shadow);
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 15px var(--shadow-hover);
+}
+
+/* ========== 头部横幅 ========== */
+.hero-banner {
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe, #74b9ff);
+  color: #fff;
+  text-align: center;
+  padding: 80px 24px 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 装饰性背景圆 */
+.hero-banner::before {
+  content: '';
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 50%;
+  top: -80px;
+  right: -60px;
+}
+
+.hero-banner::after {
+  content: '';
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 50%;
+  bottom: -50px;
+  left: -40px;
+}
+
+.hero-banner h1 {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.hero-tagline {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  position: relative;
+}
+
+/* ========== 导航按钮 ========== */
+.nav-links {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 24px;
+  position: relative;
+  flex-wrap: wrap;
+}
+
+.nav-links a {
+  color: #fff;
+  text-decoration: none;
+  padding: 8px 20px;
+  border: 1.5px solid rgba(255,255,255,0.5);
+  border-radius: 20px;
+  font-size: 0.9rem;
+  transition: all 0.3s;
+}
+
+.nav-links a:hover {
+  background: rgba(255,255,255,0.2);
+  border-color: #fff;
+}
+
+/* ========== 通用 Section 样式 ========== */
+.section {
+  padding: 60px 24px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.section-alt {
+  background: var(--bg-section-alt);
+}
+
+.section-alt .section {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.section-title {
+  font-size: 1.8rem;
+  color: var(--accent);
+  margin-bottom: 32px;
+  text-align: center;
+  position: relative;
+}
+
+.section-title::after {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 3px;
+  background: var(--accent);
+  margin: 10px auto 0;
+  border-radius: 2px;
+}
+
+/* ========== 关于我 ========== */
+.about-content {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* CSS 绘制的简易头像 */
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  position: relative;
+  flex-shrink: 0;
+  box-shadow: 0 4px 20px var(--shadow-hover);
+}
+
+/* 眼睛 */
+.avatar::before {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: #fff;
+  border-radius: 50%;
+  top: 42px;
+  left: 32px;
+  box-shadow: 32px 0 0 #fff;
+}
+
+/* 微笑嘴巴 */
+.avatar::after {
+  content: '';
+  position: absolute;
+  width: 36px;
+  height: 18px;
+  border-bottom: 3px solid #fff;
+  border-radius: 0 0 50% 50%;
+  top: 65px;
+  left: 42px;
+}
+
+.about-text {
+  flex: 1;
+  min-width: 250px;
+}
+
+.about-text p {
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  font-size: 1.02rem;
+}
+
+/* ========== 项目卡片网格 ========== */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.project-card {
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 2px 10px var(--shadow);
+}
+
+.project-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 25px var(--shadow-hover);
+  border-color: var(--accent-light);
+}
+
+.project-card .card-icon {
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+
+.project-card h3 {
+  font-size: 1.15rem;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+
+.project-card p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+
+.tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  background: var(--tag-bg);
+  color: var(--tag-text);
+  padding: 3px 10px;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+/* ========== 项目详情弹窗 ========== */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: var(--modal-overlay);
+  z-index: 300;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+.modal-overlay.show {
+  display: flex;
+}
+
+.modal {
+  background: var(--bg-card);
+  border-radius: 20px;
+  padding: 36px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  animation: modalPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+}
+
+@keyframes modalPop {
+  from { transform: scale(0.7); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: var(--bg-section-alt);
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.modal-close:hover {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.modal .card-icon {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+}
+
+.modal h2 {
+  font-size: 1.4rem;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.modal .modal-desc {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+.modal .tags {
+  margin-bottom: 16px;
+}
+
+.modal .lesson-ref {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ========== 技能进度条 ========== */
+.skills-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.skill-item {
+  width: 100%;
+}
+
+.skill-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.skill-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.skill-percent {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.skill-bar {
+  width: 100%;
+  height: 10px;
+  background: var(--bg-section-alt);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.skill-fill {
+  height: 100%;
+  border-radius: 5px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-light));
+  width: 0;
+  transition: width 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* ========== 学习旅程时间线 ========== */
+.timeline {
+  position: relative;
+  padding-left: 36px;
+}
+
+/* 垂直连接线 */
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 13px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: var(--timeline-line);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 28px;
+  padding-left: 8px;
+}
+
+.timeline-item:last-child {
+  margin-bottom: 0;
+}
+
+/* 圆点 */
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -31px;
+  top: 6px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid var(--bg-primary);
+  box-shadow: 0 0 0 2px var(--accent-light);
+}
+
+.timeline-item .lesson-num {
+  font-size: 0.78rem;
+  color: var(--accent);
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.timeline-item h4 {
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.timeline-item p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+
+/* ========== 页脚 ========== */
+.footer {
+  text-align: center;
+  padding: 32px 24px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  border-top: 1px solid var(--border);
+}
+
+.footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+/* ========== 响应式 ========== */
+@media (max-width: 600px) {
+  .hero-banner {
+    padding: 60px 20px 48px;
+  }
+  .hero-banner h1 {
+    font-size: 1.8rem;
+  }
+  .section {
+    padding: 40px 20px;
+  }
+  .section-title {
+    font-size: 1.5rem;
+  }
+  .about-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+  .nav-links a {
+    padding: 6px 14px;
+    font-size: 0.82rem;
+  }
+  .theme-toggle {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+    top: 14px;
+    right: 14px;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- 主题切换按钮 -->
+<button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="切换深色/浅色模式">🌙</button>
+
+<!-- ========== 头部横幅 ========== -->
+<header class="hero-banner">
+  <h1>小明的编程之旅</h1>
+  <p class="hero-tagline">从零开始，用 AI 创造有趣的作品</p>
+  <nav class="nav-links">
+    <a href="#about">关于我</a>
+    <a href="#projects">我的作品</a>
+    <a href="#skills">技能树</a>
+    <a href="#journey">学习旅程</a>
+  </nav>
+</header>
+
+<!-- ========== 关于我 ========== -->
+<section class="section" id="about">
+  <h2 class="section-title">关于我</h2>
+  <div class="about-content">
+    <div class="avatar"></div>
+    <div class="about-text">
+      <p>大家好！我是小明，一名热爱探索的初中生。</p>
+      <p>在学校里，我最喜欢的科目是数学和科学。课余时间喜欢画画、玩游戏，还有——编程！虽然我刚开始学习，但已经深深着迷于用代码创造东西的感觉。</p>
+      <p>通过这 7 节 AI 编程课，我学会了用 Claude Code 从零开始做出属于自己的应用。下面就是我的作品，快来看看吧！</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 我的作品 ========== -->
+<div class="section-alt">
+  <section class="section" id="projects">
+    <h2 class="section-title">我的作品</h2>
+    <div class="projects-grid" id="projectsGrid">
+      <!-- 项目卡片由 JS 生成 -->
+    </div>
+  </section>
+</div>
+
+<!-- ========== 技能树 ========== -->
+<section class="section" id="skills">
+  <h2 class="section-title">技能树</h2>
+  <div class="skills-list" id="skillsList">
+    <!-- 技能条由 JS 生成 -->
+  </div>
+</section>
+
+<!-- ========== 学习旅程时间线 ========== -->
+<div class="section-alt">
+  <section class="section" id="journey">
+    <h2 class="section-title">学习旅程</h2>
+    <div class="timeline" id="timeline">
+      <!-- 时间线由 JS 生成 -->
+    </div>
+  </section>
+</div>
+
+<!-- ========== 页脚 ========== -->
+<footer class="footer">
+  用 <a href="https://claude.ai" target="_blank">Claude Code</a> 构建 | 小明的编程之旅 2026
+</footer>
+
+<!-- ========== 项目详情弹窗 ========== -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalContent">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="card-icon" id="modalIcon"></div>
+    <h2 id="modalTitle"></h2>
+    <div class="tags" id="modalTags"></div>
+    <p class="modal-desc" id="modalDesc"></p>
+    <p class="lesson-ref" id="modalLesson"></p>
+  </div>
+</div>
+
+<script>
+/* ========== 项目数据 ========== */
+const projects = [
+  {
+    icon: '🏠',
+    title: '个人主页',
+    desc: '我的第一个网页作品！用 HTML 搭建结构，CSS 添加样式，做出了一个好看的自我介绍页面。',
+    tags: ['HTML', 'CSS'],
+    detail: '这是一切的起点。我学会了什么是 HTML 标签、CSS 选择器，还知道了怎么给文字加颜色、调字号、设置背景。虽然很简单，但看到浏览器里显示出自己写的网页，真的超级激动！',
+    lesson: '来自第 1-2 课：认识 HTML 与 CSS'
+  },
+  {
+    icon: '🧠',
+    title: '学习类型测试',
+    desc: '一个互动小测验，通过几道选择题判断你是视觉型、听觉型还是动手型学习者。',
+    tags: ['JavaScript', '交互'],
+    detail: '这个项目让我第一次真正使用 JavaScript！我学会了怎么监听按钮点击、怎么用变量记录分数、怎么根据结果显示不同的内容。最有趣的是设计题目和结果描述的过程。',
+    lesson: '来自第 3 课：JavaScript 入门与交互'
+  },
+  {
+    icon: '🍅',
+    title: '番茄钟计时器',
+    desc: '一个帮助专注学习的计时工具，支持 25 分钟工作 + 5 分钟休息的循环。',
+    tags: ['JavaScript', '工具'],
+    detail: '这个项目让我深入学习了 JavaScript 的定时器功能（setInterval 和 clearInterval）。我还加了开始、暂停、重置按钮，以及进度条动画。现在我写作业的时候真的会用它来帮我专注！',
+    lesson: '来自第 4 课：JavaScript 进阶'
+  },
+  {
+    icon: '🃏',
+    title: '记忆翻牌游戏',
+    desc: '一个 4x4 的卡片配对游戏，有翻转动画、计时、评分和音效。',
+    tags: ['JavaScript', '游戏'],
+    detail: '这是我最喜欢的项目之一！我学会了 CSS 3D 翻转动画、数组洗牌算法，还用 Web Audio API 做了音效。最有成就感的是实现了配对逻辑——两张卡片翻开后自动判断是否匹配。',
+    lesson: '来自第 5 课：做一个小游戏'
+  },
+  {
+    icon: '📖',
+    title: '创意故事生成器',
+    desc: '输入名字，选择主题，一键生成属于你的独特故事，还有打字机效果。',
+    tags: ['JavaScript', 'AI 概念'],
+    detail: '这个项目让我体验了"用程序创造内容"的感觉。我设计了四种故事主题，每种都有大量的开头、情节和结尾素材。程序随机组合它们，每次都能生成不同的故事。打字机效果让故事呈现得特别有仪式感！',
+    lesson: '来自第 6 课：创意生成器与 AI 概念'
+  }
+];
+
+/* ========== 技能数据 ========== */
+const skills = [
+  { name: 'HTML / CSS', percent: 85 },
+  { name: 'JavaScript', percent: 70 },
+  { name: 'AI 工具使用', percent: 90 },
+  { name: '调试与排错', percent: 65 },
+  { name: '创意设计', percent: 75 }
+];
+
+/* ========== 时间线数据 ========== */
+const timeline = [
+  { num: '第 1 课', title: '初识编程世界', desc: '了解什么是编程，认识 Claude Code，写下第一行代码。' },
+  { num: '第 2 课', title: '搭建个人主页', desc: '学习 HTML 和 CSS，用代码做出一个漂亮的自我介绍页面。' },
+  { num: '第 3 课', title: '让网页动起来', desc: '学习 JavaScript 基础，给网页添加点击和交互功能。' },
+  { num: '第 4 课', title: 'JavaScript 进阶', desc: '深入学习定时器、数组等概念，开发番茄钟工具。' },
+  { num: '第 5 课', title: '做一个小游戏', desc: '挑战记忆翻牌游戏，学习动画和游戏逻辑。' },
+  { num: '第 6 课', title: '创意故事生成器', desc: '体验用代码生成内容，理解 AI 的基本原理。' },
+  { num: '第 7 课', title: '作品集与毕业', desc: '整合所有作品，制作个人作品集网站，展示学习成果！' }
+];
+
+/* ========== 渲染项目卡片 ========== */
+function renderProjects() {
+  const grid = document.getElementById('projectsGrid');
+  projects.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'project-card';
+    card.onclick = () => openModal(i);
+    card.innerHTML = `
+      <div class="card-icon">${p.icon}</div>
+      <h3>${p.title}</h3>
+      <p>${p.desc}</p>
+      <div class="tags">${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+/* ========== 渲染技能进度条 ========== */
+function renderSkills() {
+  const list = document.getElementById('skillsList');
+  skills.forEach(s => {
+    const item = document.createElement('div');
+    item.className = 'skill-item';
+    item.innerHTML = `
+      <div class="skill-header">
+        <span class="skill-name">${s.name}</span>
+        <span class="skill-percent">${s.percent}%</span>
+      </div>
+      <div class="skill-bar">
+        <div class="skill-fill" data-width="${s.percent}"></div>
+      </div>
+    `;
+    list.appendChild(item);
+  });
+}
+
+/* ========== 渲染时间线 ========== */
+function renderTimeline() {
+  const tl = document.getElementById('timeline');
+  timeline.forEach(t => {
+    const item = document.createElement('div');
+    item.className = 'timeline-item';
+    item.innerHTML = `
+      <div class="lesson-num">${t.num}</div>
+      <h4>${t.title}</h4>
+      <p>${t.desc}</p>
+    `;
+    tl.appendChild(item);
+  });
+}
+
+/* ========== 打开项目详情弹窗 ========== */
+function openModal(index) {
+  const p = projects[index];
+  document.getElementById('modalIcon').textContent = p.icon;
+  document.getElementById('modalTitle').textContent = p.title;
+  document.getElementById('modalDesc').textContent = p.detail;
+  document.getElementById('modalLesson').textContent = p.lesson;
+  const tagsEl = document.getElementById('modalTags');
+  tagsEl.innerHTML = p.tags.map(t => `<span class="tag">${t}</span>`).join('');
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+/* ========== 关闭弹窗 ========== */
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('show');
+}
+
+// 点击弹窗外部关闭
+document.getElementById('modalOverlay').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) closeModal();
+});
+
+// Esc 键关闭弹窗
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeModal();
+});
+
+/* ========== 深色/浅色主题切换 ========== */
+function toggleTheme() {
+  const html = document.documentElement;
+  const btn = document.getElementById('themeToggle');
+  if (html.getAttribute('data-theme') === 'dark') {
+    html.removeAttribute('data-theme');
+    btn.textContent = '🌙';
+    localStorage.setItem('theme', 'light');
+  } else {
+    html.setAttribute('data-theme', 'dark');
+    btn.textContent = '☀️';
+    localStorage.setItem('theme', 'dark');
+  }
+}
+
+// 加载时恢复用户偏好的主题
+function loadTheme() {
+  const saved = localStorage.getItem('theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeToggle').textContent = '☀️';
+  }
+}
+
+/* ========== 技能进度条动画（滚动触发） ========== */
+function animateSkills() {
+  const skillsSection = document.getElementById('skills');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // 进入视口时启动动画
+        document.querySelectorAll('.skill-fill').forEach(bar => {
+          bar.style.width = bar.dataset.width + '%';
+        });
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  observer.observe(skillsSection);
+}
+
+/* ========== 初始化 ========== */
+loadTheme();
+renderProjects();
+renderSkills();
+renderTimeline();
+animateSkills();
+</script>
+</body>
+</html>

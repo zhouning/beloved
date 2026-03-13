@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>关于我 - 小明的个人主页</title>
+  <style>
+    /* ===== 全局样式重置 ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      /* 渐变背景：从浅蓝到浅紫 */
+      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 50%, #d4b8ff 100%);
+      min-height: 100vh;
+      font-family: -apple-system, "Microsoft YaHei", "微软雅黑", sans-serif;
+      padding: 20px;
+      color: #333;
+    }
+
+    /* ===== 主容器 ===== */
+    .container {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    /* ===== 卡片通用样式 ===== */
+    .card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      padding: 32px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+    }
+
+    /* ===== 头像区域（纯 CSS 绘制） ===== */
+    .avatar-section {
+      text-align: center;
+      padding-bottom: 24px;
+    }
+
+    .avatar {
+      /* 用 CSS 画一个可爱头像 */
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      margin: 0 auto 20px;
+      position: relative;
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+      overflow: hidden;
+    }
+
+    /* 头像里的笑脸 */
+    .avatar::before {
+      content: "";
+      position: absolute;
+      /* 两只眼睛用 box-shadow 实现 */
+      width: 12px;
+      height: 12px;
+      background: white;
+      border-radius: 50%;
+      top: 40px;
+      left: 35px;
+      box-shadow: 38px 0 0 0 white;
+    }
+
+    .avatar::after {
+      content: "";
+      position: absolute;
+      /* 微笑的嘴巴 */
+      width: 36px;
+      height: 18px;
+      border-bottom: 4px solid white;
+      border-radius: 0 0 50% 50%;
+      top: 62px;
+      left: 42px;
+    }
+
+    /* ===== 名字标题 ===== */
+    .name {
+      font-size: 2.2em;
+      font-weight: 800;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 1.1em;
+      color: #888;
+      margin-bottom: 8px;
+    }
+
+    /* ===== 自我介绍 ===== */
+    .intro {
+      font-size: 1.05em;
+      line-height: 1.8;
+      color: #555;
+    }
+
+    /* ===== 爱好区域 ===== */
+    .section-title {
+      font-size: 1.4em;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #444;
+    }
+
+    .hobbies {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .hobby-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+      background: linear-gradient(135deg, #f5f7fa, #f0f2ff);
+      border-radius: 16px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .hobby-item:hover {
+      transform: translateX(6px);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    }
+
+    .hobby-emoji {
+      font-size: 2em;
+      /* 给 emoji 加一个圆形背景 */
+      width: 52px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      flex-shrink: 0;
+    }
+
+    .hobby-text h3 {
+      font-size: 1.1em;
+      color: #444;
+      margin-bottom: 2px;
+    }
+
+    .hobby-text p {
+      font-size: 0.9em;
+      color: #888;
+    }
+
+    /* ===== 最爱歌曲区域 ===== */
+    .song-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .song-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      background: linear-gradient(135deg, #fff5f5, #fff0fb);
+      border-radius: 16px;
+      transition: transform 0.2s ease;
+    }
+
+    .song-item:hover {
+      transform: scale(1.02);
+    }
+
+    .song-number {
+      /* 歌曲序号小圆圈 */
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f093fb, #f5576c);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.95em;
+      flex-shrink: 0;
+    }
+
+    .song-info {
+      flex: 1;
+    }
+
+    .song-name {
+      font-weight: 600;
+      color: #444;
+      font-size: 1.05em;
+    }
+
+    .song-artist {
+      font-size: 0.85em;
+      color: #999;
+      margin-top: 2px;
+    }
+
+    /* ===== 页脚 ===== */
+    .footer {
+      text-align: center;
+      padding: 20px;
+      color: #aaa;
+      font-size: 0.9em;
+    }
+
+    /* ===== 动画 ===== */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card {
+      animation: fadeInUp 0.6s ease forwards;
+    }
+
+    .card:nth-child(2) {
+      animation-delay: 0.15s;
+    }
+
+    .card:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+
+    /* ===== 响应式适配 ===== */
+    @media (max-width: 480px) {
+      body {
+        padding: 12px;
+      }
+
+      .card {
+        padding: 24px 18px;
+        border-radius: 18px;
+      }
+
+      .name {
+        font-size: 1.8em;
+      }
+
+      .hobby-item {
+        padding: 12px 14px;
+      }
+
+      .hobby-emoji {
+        width: 44px;
+        height: 44px;
+        font-size: 1.6em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- 头像和名字卡片 -->
+    <div class="card avatar-section">
+      <div class="avatar"></div>
+      <h1 class="name">小明</h1>
+      <p class="subtitle">✨ 初二学生 · AI 编程爱好者 ✨</p>
+    </div>
+
+    <!-- 自我介绍卡片 -->
+    <div class="card">
+      <h2 class="section-title">👋 关于我</h2>
+      <p class="intro">
+        大家好！我是小明，一个热爱生活的初二学生。
+        我对很多事情都充满好奇心，喜欢尝试新鲜事物。
+        最近开始学习用 AI 来写代码，感觉打开了新世界的大门！
+        希望以后能做出更多有趣的小项目～
+      </p>
+    </div>
+
+    <!-- 兴趣爱好卡片 -->
+    <div class="card">
+      <h2 class="section-title">🎯 我的爱好</h2>
+      <div class="hobbies">
+        <div class="hobby-item">
+          <div class="hobby-emoji">🏀</div>
+          <div class="hobby-text">
+            <h3>打篮球</h3>
+            <p>每周和同学打三次球，最喜欢投三分！</p>
+          </div>
+        </div>
+        <div class="hobby-item">
+          <div class="hobby-emoji">🎵</div>
+          <div class="hobby-text">
+            <h3>听音乐</h3>
+            <p>喜欢流行音乐，经常戴着耳机写作业～</p>
+          </div>
+        </div>
+        <div class="hobby-item">
+          <div class="hobby-emoji">🎮</div>
+          <div class="hobby-text">
+            <h3>玩游戏</h3>
+            <p>周末会和朋友一起组队，最爱策略类游戏！</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 最爱歌曲卡片 -->
+    <div class="card">
+      <h2 class="section-title">🎶 我最爱的歌</h2>
+      <ul class="song-list">
+        <li class="song-item">
+          <div class="song-number">1</div>
+          <div class="song-info">
+            <div class="song-name">晴天</div>
+            <div class="song-artist">周杰伦</div>
+          </div>
+        </li>
+        <li class="song-item">
+          <div class="song-number">2</div>
+          <div class="song-info">
+            <div class="song-name">起风了</div>
+            <div class="song-artist">买辣椒也用券</div>
+          </div>
+        </li>
+        <li class="song-item">
+          <div class="song-number">3</div>
+          <div class="song-info">
+            <div class="song-name">孤勇者</div>
+            <div class="song-artist">陈奕迅</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- 页脚 -->
+    <div class="footer">
+      用 ❤️ 和 AI 一起制作 · 小明的个人主页
+    </div>
+
+  </div>
+</body>
+</html>
