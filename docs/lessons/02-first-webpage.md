@@ -151,6 +151,14 @@ start index.html
 
 是不是很有成就感？这是你人生中第一个网页！
 
+下面是一个简单网页的例子，你可以看看效果：
+
+<CodePreview
+  html="<h1>关于我</h1><p>大家好！我是一名初中生，正在学习用 AI 编程。</p><h2>我的爱好</h2><ul><li>打篮球</li><li>听音乐</li><li>玩游戏</li></ul>"
+  css="body { background: linear-gradient(135deg, #e0c3fc, #8ec5fc); font-family: sans-serif; padding: 20px; } h1 { color: #7c3aed; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); } h2 { color: #6d28d9; } ul { list-style: none; padding: 0; } li { padding: 6px 0; }"
+  height="280px"
+/>
+
 ---
 
 ## 让Claude Code帮你修改网页
@@ -224,6 +232,18 @@ start index.html
 - 学会了让Claude Code帮你修改和美化网页
 
 这些可都是真正的开发者会做的事情！你已经迈出了编程的第一步。
+
+---
+
+## 小测验
+
+来检验一下这节课学到了多少吧！
+
+<Quiz :questions="[
+  { q: 'HTML 标签 <h1> 和 <p> 分别代表什么？', options: ['h1 是标题，p 是一个大的框框', 'h1 是大标题，p 是一段文字', 'h1 是按钮，p 是图片', 'h1 是链接，p 是背景'], answer: 1 },
+  { q: '下列哪个是写好提示词的秘诀？', options: ['越复杂越好，一口气说出所有要求', '说得越模糊越能激发 AI 的创意', '说清楚你要什么，具体描述细节，一次一个任务', '所有提示词都应该用英语'], answer: 2 },
+  { q: '你做好的 HTML 网页应该怎么查看效果？', options: ['直接用记事本打开', '在终端里查看代码', '用浏览器打开 index.html 文件', '发给 Claude Code 让它帮你查看'], answer: 2 }
+]" />
 
 ---
 

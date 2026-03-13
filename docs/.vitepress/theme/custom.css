@@ -91,6 +91,228 @@
   opacity: 0.85;
 }
 
+/* 小测验组件 */
+.quiz-container {
+  margin: 24px 0;
+  padding: 20px 24px;
+  background: var(--vp-c-bg-soft);
+  border-radius: 12px;
+}
+
+.quiz-question {
+  margin-bottom: 20px;
+}
+
+.quiz-question:last-of-type {
+  margin-bottom: 0;
+}
+
+.quiz-question-text {
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--vp-c-text-1);
+}
+
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.quiz-option {
+  text-align: left;
+  padding: 10px 14px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  background: var(--vp-c-bg);
+  color: var(--vp-c-text-1);
+  cursor: pointer;
+  font-size: 14px;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.quiz-option:hover:not(:disabled) {
+  border-color: var(--vp-c-brand-1);
+  background: var(--vp-c-brand-soft);
+}
+
+.quiz-option:disabled {
+  cursor: default;
+}
+
+.quiz-option.correct {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.quiz-option.wrong {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.quiz-feedback {
+  margin: 8px 0 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.quiz-feedback.correct {
+  color: #10b981;
+}
+
+.quiz-feedback.wrong {
+  color: #ef4444;
+}
+
+.quiz-summary {
+  margin-top: 20px;
+  padding: 12px 16px;
+  background: var(--vp-c-brand-soft);
+  border-radius: 8px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--vp-c-text-1);
+}
+
+/* 代码预览组件 */
+.code-preview {
+  margin: 16px 0;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.code-preview-toolbar {
+  display: flex;
+  gap: 0;
+  background: var(--vp-c-bg-soft);
+  border-bottom: 1px solid var(--vp-c-divider);
+}
+
+.code-preview-tab {
+  padding: 8px 16px;
+  border: none;
+  background: none;
+  color: var(--vp-c-text-2);
+  font-size: 13px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.code-preview-tab.active {
+  color: var(--vp-c-brand-1);
+  border-bottom-color: var(--vp-c-brand-1);
+}
+
+.code-preview-frame iframe {
+  width: 100%;
+  border: none;
+  background: #fff;
+  display: block;
+}
+
+.code-preview-source {
+  max-height: 400px;
+  overflow: auto;
+}
+
+.code-preview-source pre {
+  margin: 0;
+  padding: 16px;
+  font-size: 13px;
+  line-height: 1.6;
+  background: var(--vp-c-bg-soft);
+}
+
+/* 作品展示卡片 */
+.showcase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.showcase-card {
+  padding: 20px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 12px;
+  background: var(--vp-c-bg-soft);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.showcase-card:hover {
+  border-color: var(--vp-c-brand-1);
+  box-shadow: 0 2px 12px rgba(124, 58, 237, 0.1);
+}
+
+.showcase-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.showcase-card-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--vp-c-text-1);
+}
+
+.showcase-card-lesson {
+  font-size: 12px;
+  padding: 2px 8px;
+  background: var(--vp-c-brand-soft);
+  color: var(--vp-c-brand-1);
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+.showcase-card-desc {
+  font-size: 14px;
+  color: var(--vp-c-text-2);
+  margin: 0 0 12px;
+  line-height: 1.5;
+}
+
+.showcase-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.showcase-card-author {
+  font-size: 13px;
+  color: var(--vp-c-text-3);
+}
+
+.showcase-card-link {
+  font-size: 13px;
+  color: var(--vp-c-brand-1) !important;
+  text-decoration: none !important;
+  font-weight: 500;
+}
+
+.showcase-card-link:hover {
+  text-decoration: underline !important;
+}
+
+/* 评论区 */
+.comments-container {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--vp-c-divider);
+}
+
+.comments-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--vp-c-text-1);
+}
+
 /* 移动端优化 */
 @media (max-width: 640px) {
   .vp-doc h1 {

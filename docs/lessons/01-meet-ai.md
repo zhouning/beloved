@@ -176,6 +176,19 @@ claude
 
 ---
 
+## 小测验
+
+来检验一下这节课学到了多少吧！
+
+<Quiz :questions="[
+  { q: '下面哪个不是 AI 在日常生活中的应用？', options: ['抖音根据你的喜好推荐视频', '美颜滤镜能识别你的脸并加上特效', '拼音输入法猜测你想输入的词', '手动调整相机的对焦和亮度'], answer: 3 },
+  { q: '提示词（Prompt）的作用是什么？', options: ['让 Claude Code 运行得更快', '清楚地告诉 AI 你想要什么，AI 就能给出更好的结果', '让终端变成更漂亮的颜色', '防止 Claude Code 出错'], answer: 1 },
+  { q: '什么是 Terminal（终端）？', options: ['一种高级的浏览器', '用文字和电脑对话的窗口', '一个可以玩游戏的应用程序', 'Claude Code 的另一个名字'], answer: 1 },
+  { q: 'Claude Code 和普通 AI 聊天最大的区别是什么？', options: ['Claude Code 可以用中文，其他 AI 不行', 'Claude Code 只能做编程工作', 'Claude Code 不仅能聊天，还能直接在你电脑上创建文件、写代码', 'Claude Code 永远不会出错'], answer: 2 }
+]" />
+
+---
+
 ## 挑战任务
 
 恭喜你完成了第一课的学习！现在是挑战时间。
