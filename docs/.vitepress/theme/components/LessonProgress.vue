@@ -11,7 +11,12 @@ const lessons = [
   '/lessons/04-',
   '/lessons/05-',
   '/lessons/06-',
-  '/lessons/07-'
+  '/lessons/07-',
+  '/lessons/08-',
+  '/lessons/09-',
+  '/lessons/10-',
+  '/lessons/11-',
+  '/lessons/12-'
 ]
 
 const totalLessons = lessons.length

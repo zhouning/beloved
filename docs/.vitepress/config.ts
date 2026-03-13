@@ -5,6 +5,7 @@ export default defineConfig({
   title: 'AI编程启蒙课',
   description: '写给初中生的 Claude Code 入门教程',
   base: '/',
+  ignoreDeadLinks: [/\.py$/],
 
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
@@ -34,7 +35,7 @@ export default defineConfig({
         ]
       },
       {
-        text: '课程内容',
+        text: '入门篇',
         items: [
           { text: '第1课：认识AI与Claude Code', link: '/lessons/01-meet-ai' },
           { text: '第2课：用AI做你的第一个网页', link: '/lessons/02-first-webpage' },
@@ -43,6 +44,24 @@ export default defineConfig({
           { text: '第5课：做一个创意小游戏', link: '/lessons/05-mini-game' },
           { text: '第6课：给作品加上AI超能力', link: '/lessons/06-ai-power' },
           { text: '第7课：展示你的作品集', link: '/lessons/07-showcase' }
+        ]
+      },
+      {
+        text: '进阶篇',
+        items: [
+          { text: '第8课：初识 Python', link: '/lessons/08-meet-python' },
+          { text: '第9课：Python 数据魔法', link: '/lessons/09-data-magic' },
+          { text: '第10课：数据可视化', link: '/lessons/10-data-viz' },
+          { text: '第11课：聊天机器人', link: '/lessons/11-chatbot' },
+          { text: '第12课：毕业设计', link: '/lessons/12-graduation' }
+        ]
+      },
+      {
+        text: '趣味专题',
+        items: [
+          { text: '用 AI 做像素画', link: '/topics/pixel-art' },
+          { text: '用 AI 做表情包', link: '/topics/meme-maker' },
+          { text: '用 AI 做音乐节拍机', link: '/topics/beat-maker' }
         ]
       },
       {
