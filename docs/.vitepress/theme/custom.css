@@ -27,6 +27,70 @@
   border-color: #8b5cf6;
 }
 
+/* 课程进度条 */
+.lesson-progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  margin-bottom: 16px;
+  background: var(--vp-c-brand-soft);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--vp-c-text-1);
+}
+
+.lesson-progress-text {
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.lesson-progress-bar {
+  flex: 1;
+  height: 6px;
+  background: var(--vp-c-bg-soft);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.lesson-progress-fill {
+  height: 100%;
+  background: var(--vp-c-brand-1);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+/* 课程反馈入口 */
+.lesson-feedback {
+  margin-top: 24px;
+  padding: 16px 20px;
+  background: var(--vp-c-brand-soft);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.lesson-feedback-text {
+  margin: 0 0 12px;
+  font-size: 14px;
+  color: var(--vp-c-text-2);
+}
+
+.lesson-feedback-link {
+  display: inline-block;
+  padding: 6px 20px;
+  background: var(--vp-c-brand-1);
+  color: #fff !important;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none !important;
+  transition: opacity 0.2s;
+}
+
+.lesson-feedback-link:hover {
+  opacity: 0.85;
+}
+
 /* 移动端优化 */
 @media (max-width: 640px) {
   .vp-doc h1 {

@@ -4,7 +4,7 @@ export default defineConfig({
   lang: 'zh-CN',
   title: 'AI编程启蒙课',
   description: '写给初中生的 Claude Code 入门教程',
-  base: '/beloved/',
+  base: '/',
 
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
@@ -20,7 +20,8 @@ export default defineConfig({
       { text: '首页', link: '/' },
       { text: '课前准备', link: '/prepare' },
       { text: '开始学习', link: '/lessons/01-meet-ai' },
-      { text: '常见问题', link: '/faq' }
+      { text: '常见问题', link: '/faq' },
+      { text: '课程反馈', link: 'https://github.com/zhouning/beloved/discussions' }
     ],
 
     sidebar: [
